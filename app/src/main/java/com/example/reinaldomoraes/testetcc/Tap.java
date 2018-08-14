@@ -6,16 +6,23 @@ public class Tap {
 
     private Hand hand;
     private int intensity;
-    private Date time;
+    private Date tapTime;
     private long interval; //in milliseconds
 
-    public Tap(Date time) {
-        this.time = time;
+    public Tap(Date tapTime) {
+        this.tapTime = tapTime;
     }
 
-    public Tap(Hand hand, Date time) {
+    public Tap(Hand hand, Date tapTime) {
         this.hand = hand;
-        this.time = time;
+        this.tapTime = tapTime;
+    }
+
+    public Tap(Hand hand, int intensity, Date tapTime, long interval) {
+        this.hand = hand;
+        this.intensity = intensity;
+        this.tapTime = tapTime;
+        this.interval = interval;
     }
 
     public Hand getHand() {
@@ -34,12 +41,12 @@ public class Tap {
         this.intensity = intensity;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getTapTime() {
+        return tapTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTapTime(Date tapTime) {
+        this.tapTime = tapTime;
     }
 
     public long getInterval() {

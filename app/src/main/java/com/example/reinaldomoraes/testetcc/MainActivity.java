@@ -14,11 +14,9 @@ public class MainActivity extends AppCompatActivity {
     Button tapRightButton;
     Button tapLeftButton;
     TextView timeText;
-//    Tap tap1 = new Tap(Hand.RIGHT);
-//    Tap tap2 = new Tap(Hand.LEFT);
     ArrayList<Tap> taps = new ArrayList();
-    long interval;
     Tap previousTap = new Tap(new Date()); //refact
+    Tap currentTap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,41 +30,39 @@ public class MainActivity extends AppCompatActivity {
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Tap tap = new Tap(Hand.RIGHT, new Date());
-                taps.add(tap);
-
-//              tap1.setTime(new Date());
+                insertTapOnListWithInterval(Hand.RIGHT);
+                timeText.setText(concatenateIntervals());
             }
         });
 
         tapLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Tap tap = new Tap(Hand.LEFT, new Date());
-                taps.add(tap);
-
-                if (taps.size() >= 2){
-
-                    for (Tap currentTap : taps) {
-                        timeText.setText(String.valueOf(currentTap.getTime().getTime() - previousTap.getTime().getTime()));
-
-                        previousTap = currentTap;
-                    }
-
-                }
-
-//                tap2.setTime(new Date());
-//                long mills = tap2.getTime().getTime() - tap1.getTime().getTime();
-//
-//                if(mills > 0){
-//                    timeText.setText(String.valueOf(mills));
-//                }
-
+                insertTapOnListWithInterval(Hand.LEFT);
+                timeText.setText(concatenateIntervals());
             }
         });
 
+    }
 
+    private String concatenateIntervals() {
+        String text = "";
+        for (Tap tap : taps) {
+            text += String.valueOf(tap.getInterval()) + ", ";
+        }
+        return text;
+    }
+
+    private void insertTapOnListWithInterval(Hand left) {
+        if (taps.isEmpty()) {
+            currentTap = new Tap(left, 10, new Date(), 0);
+        } else {
+
+            previousTap = taps.get(taps.size() - 1);
+            currentTap = new Tap(left, 10, new Date(), 0);
+            long interval = currentTap.getTapTime().getTime() - previousTap.getTapTime().getTime();
+            currentTap.setInterval(interval);
+        }
+        taps.add(currentTap);
     }
 }
