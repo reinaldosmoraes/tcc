@@ -18,6 +18,13 @@ public class Tap {
         this.tapTime = tapTime;
     }
 
+    public Tap(Hand hand, int intensity, long interval) {
+        this.hand = hand;
+        this.intensity = intensity;
+        this.tapTime = tapTime;
+        this.interval = interval;
+    }
+
     public Tap(Hand hand, int intensity, Date tapTime, long interval) {
         this.hand = hand;
         this.intensity = intensity;

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     Button tapLeftButton;
     TextView timeText;
     ArrayList<Tap> taps = new ArrayList();
-    Tap previousTap = new Tap(new Date()); //refact
+    //ArrayList<Tap> paradiddle = [new Tap(Hand.RIGHT, 10, 500)]
     Tap currentTap;
 
     @Override
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             currentTap = new Tap(left, 10, new Date(), 0);
         } else {
 
-            previousTap = taps.get(taps.size() - 1);
+            Tap previousTap = taps.get(taps.size() - 1);
             currentTap = new Tap(left, 10, new Date(), 0);
             long interval = currentTap.getTapTime().getTime() - previousTap.getTapTime().getTime();
             currentTap.setInterval(interval);
