@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,9 +15,11 @@ public class MainActivity extends AppCompatActivity {
     Button tapRightButton;
     Button tapLeftButton;
     TextView timeText;
+    ImageView icCorrectImageView;
+    ImageView icIncorrectImageView;
     ArrayList<Tap> taps = new ArrayList();
-    //ArrayList<Tap> paradiddle = [new Tap(Hand.RIGHT, 10, 500)]
-    Tap currentTap;
+    ArrayList<Tap> paradiddle;
+    int defaultIntensity = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +29,19 @@ public class MainActivity extends AppCompatActivity {
         tapRightButton = findViewById(R.id.tap_right_button_id);
         tapLeftButton = findViewById(R.id.tap_left_button_id);
         timeText = findViewById(R.id.time_text_id);
+        icCorrectImageView = findViewById(R.id.ic_correct_image_view_id);
+        icIncorrectImageView = findViewById(R.id.ic_incorrect_image_view_id);
+
+        paradiddle = createParadiddle();
 
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 insertTapOnListWithInterval(Hand.RIGHT);
                 timeText.setText(concatenateIntervals());
+
+                /* Paradiddle*/
+                verifyTap(paradiddle.get(taps.size()-1), taps.get(taps.size()-1));
             }
         });
 
@@ -40,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 insertTapOnListWithInterval(Hand.LEFT);
                 timeText.setText(concatenateIntervals());
+
+                /* Paradiddle*/
+                verifyTap(paradiddle.get(taps.size()-1), taps.get(taps.size()-1));
             }
         });
 
@@ -53,16 +66,47 @@ public class MainActivity extends AppCompatActivity {
         return text;
     }
 
-    private void insertTapOnListWithInterval(Hand left) {
+    private void insertTapOnListWithInterval(Hand hand) {
+        Tap currentTap;
+
         if (taps.isEmpty()) {
-            currentTap = new Tap(left, 10, new Date(), 0);
+            currentTap = new Tap(hand, defaultIntensity, new Date(), 0);
         } else {
 
             Tap previousTap = taps.get(taps.size() - 1);
-            currentTap = new Tap(left, 10, new Date(), 0);
+            currentTap = new Tap(hand, defaultIntensity, new Date(), 0);
             long interval = currentTap.getTapTime().getTime() - previousTap.getTapTime().getTime();
             currentTap.setInterval(interval);
         }
         taps.add(currentTap);
+    }
+
+    private ArrayList<Tap> createParadiddle() {
+        ArrayList<Tap> paradiddle = new ArrayList();
+        Tap rightHandTap = new Tap(Hand.RIGHT, defaultIntensity, 500);
+        Tap leftHandTap = new Tap(Hand.LEFT, defaultIntensity, 500);
+
+        paradiddle.add(rightHandTap);
+        paradiddle.add(leftHandTap);
+        paradiddle.add(rightHandTap);
+        paradiddle.add(rightHandTap);
+        paradiddle.add(leftHandTap);
+        paradiddle.add(rightHandTap);
+        paradiddle.add(leftHandTap);
+        paradiddle.add(leftHandTap);
+
+        return paradiddle;
+    }
+
+    private boolean verifyTap(Tap correctTap, Tap currentTap) {
+        if(correctTap.getHand() == currentTap.getHand()){
+            icCorrectImageView.setVisibility(View.VISIBLE);
+            icIncorrectImageView.setVisibility(View.INVISIBLE);
+            return true;
+        } else {
+            icCorrectImageView.setVisibility(View.INVISIBLE);
+            icIncorrectImageView.setVisibility(View.VISIBLE);
+            return false;
+        }
     }
 }
