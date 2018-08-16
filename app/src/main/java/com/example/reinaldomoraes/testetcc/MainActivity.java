@@ -37,10 +37,13 @@ public class MainActivity extends AppCompatActivity {
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertTapOnListWithInterval(Hand.RIGHT);
-                timeText.setText(concatenateIntervals());
 
                 /* Paradiddle*/
+                if(taps.size() >= 8) {
+                    taps.clear();
+                }
+                insertTapOnListWithInterval(Hand.RIGHT);
+                timeText.setText(concatenateIntervals());
                 verifyTap(paradiddle.get(taps.size()-1), taps.get(taps.size()-1));
             }
         });
@@ -48,10 +51,13 @@ public class MainActivity extends AppCompatActivity {
         tapLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertTapOnListWithInterval(Hand.LEFT);
-                timeText.setText(concatenateIntervals());
 
                 /* Paradiddle*/
+                if(taps.size() >= 8) {
+                    taps.clear();
+                }
+                insertTapOnListWithInterval(Hand.LEFT);
+                timeText.setText(concatenateIntervals());
                 verifyTap(paradiddle.get(taps.size()-1), taps.get(taps.size()-1));
             }
         });
