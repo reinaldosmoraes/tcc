@@ -54,9 +54,24 @@
         android:padding="8dp">
 
         <TextView
+            android:id="@+id/expected_pattern_text_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Padrão esperado:" />
+
+        <TextView
+            android:id="@+id/expected_interval_text_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Intervalo entre toques" />
+
+        <TextView
             android:id="@+id/time_text_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:text="Intervalo de tempo entre toques" />
     </LinearLayout>
 

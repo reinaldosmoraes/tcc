@@ -14,11 +14,12 @@ public class MainActivity extends AppCompatActivity {
 
     Button tapRightButton;
     Button tapLeftButton;
+    TextView expectedPatternText;
+    TextView expectedIntervalText;
     TextView timeText;
     ImageView icCorrectImageView;
     ImageView icIncorrectImageView;
     ArrayList<Tap> taps = new ArrayList();
-    ArrayList<Tap> paradiddle;
     ArrayList<Tap> pattern;
     int defaultIntensity = 10;
 
@@ -29,18 +30,23 @@ public class MainActivity extends AppCompatActivity {
 
         tapRightButton = findViewById(R.id.tap_right_button_id);
         tapLeftButton = findViewById(R.id.tap_left_button_id);
+        expectedPatternText = findViewById(R.id.expected_pattern_text_id);
+        expectedIntervalText = findViewById(R.id.expected_interval_text_id);
         timeText = findViewById(R.id.time_text_id);
         icCorrectImageView = findViewById(R.id.ic_correct_image_view_id);
         icIncorrectImageView = findViewById(R.id.ic_incorrect_image_view_id);
 
-        paradiddle = createPattern(Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.LEFT, Hand.LEFT);
+        pattern = createPattern(Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.LEFT, Hand.LEFT);
+
+        expectedPatternText.setText("Padrão esperado: " + getHandPattern(pattern));
+        expectedIntervalText.setText("Intervalo entre toques: 500 ms");
 
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 insertTapOnListWithInterval(Hand.RIGHT);
                 timeText.setText(concatenateIntervals());
-                verifyTap(paradiddle.get((taps.size()-1) % paradiddle.size()), taps.get(taps.size()-1));
+                verifyTap(pattern.get((taps.size()-1) % pattern.size()), taps.get(taps.size()-1));
             }
         });
 
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 insertTapOnListWithInterval(Hand.LEFT);
                 timeText.setText(concatenateIntervals());
-                verifyTap(paradiddle.get((taps.size()-1) % paradiddle.size()), taps.get(taps.size()-1));
+                verifyTap(pattern.get((taps.size()-1) % pattern.size()), taps.get(taps.size()-1));
             }
         });
 
@@ -98,5 +104,14 @@ public class MainActivity extends AppCompatActivity {
             icIncorrectImageView.setVisibility(View.VISIBLE);
             return false;
         }
+    }
+
+    private String getHandPattern(ArrayList<Tap> taps) {
+        String pattern = "";
+
+        for (Tap tap : taps) {
+            pattern += tap.getHand() + ", ";
+        }
+        return pattern;
     }
 }
