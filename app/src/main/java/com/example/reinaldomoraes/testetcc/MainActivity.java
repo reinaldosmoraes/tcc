@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView icIncorrectImageView;
     ArrayList<Tap> taps = new ArrayList();
     ArrayList<Tap> paradiddle;
+    ArrayList<Tap> pattern;
     int defaultIntensity = 10;
 
     @Override
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         icCorrectImageView = findViewById(R.id.ic_correct_image_view_id);
         icIncorrectImageView = findViewById(R.id.ic_incorrect_image_view_id);
 
-        paradiddle = createParadiddle();
+        paradiddle = createPattern(Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.LEFT, Hand.LEFT);
 
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,21 +88,14 @@ public class MainActivity extends AppCompatActivity {
         taps.add(currentTap);
     }
 
-    private ArrayList<Tap> createParadiddle() {
-        ArrayList<Tap> paradiddle = new ArrayList();
-        Tap rightHandTap = new Tap(Hand.RIGHT, defaultIntensity, 500);
-        Tap leftHandTap = new Tap(Hand.LEFT, defaultIntensity, 500);
+    private ArrayList<Tap> createPattern(Hand... hands) {
+        ArrayList<Tap> pattern = new ArrayList();
 
-        paradiddle.add(rightHandTap);
-        paradiddle.add(leftHandTap);
-        paradiddle.add(rightHandTap);
-        paradiddle.add(rightHandTap);
-        paradiddle.add(leftHandTap);
-        paradiddle.add(rightHandTap);
-        paradiddle.add(leftHandTap);
-        paradiddle.add(leftHandTap);
-
-        return paradiddle;
+        for (Hand hand : hands) {
+            Tap tap = new Tap(hand, defaultIntensity, 500);
+            pattern.add(tap);
+        }
+        return pattern;
     }
 
     private boolean verifyTap(Tap correctTap, Tap currentTap) {
