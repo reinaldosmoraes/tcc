@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Tap> taps = new ArrayList();
     ArrayList<Tap> pattern;
     int defaultIntensity = 10;
+    long expectedInterval = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         pattern = createPattern(Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.LEFT, Hand.LEFT);
 
         expectedPatternText.setText("Padrão esperado: " + getHandPattern(pattern));
-        expectedIntervalText.setText("Intervalo entre toques: 500 ms");
+        expectedIntervalText.setText("Intervalo entre toques: " + expectedInterval + " ms");
 
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean verifyTap(Tap correctTap, Tap currentTap) {
-        if(correctTap.getHand() == currentTap.getHand()){
+        if(correctTap.getHand() == currentTap.getHand() && isInTime(currentTap.getInterval())){
             icCorrectImageView.setVisibility(View.VISIBLE);
             icIncorrectImageView.setVisibility(View.INVISIBLE);
             return true;
@@ -113,5 +114,15 @@ public class MainActivity extends AppCompatActivity {
             pattern += tap.getHand() + ", ";
         }
         return pattern;
+    }
+
+    private boolean isInTime(long currentInterval) {
+        if (currentInterval == 0) { //first tap
+            return true;
+        } else if (currentInterval > expectedInterval - 200 && currentInterval < expectedInterval + 200) { //in time
+            return true;
+        } else { //out of time
+            return false;
+        }
     }
 }
