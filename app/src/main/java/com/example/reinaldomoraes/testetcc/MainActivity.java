@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     Button tapRightButton;
     Button tapLeftButton;
     TextView expectedPatternText;
-    TextView expectedIntervalText;
+    TextView bpmText;
     TextView timeText;
     ImageView icCorrectImageView;
     ImageView icIncorrectImageView;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         tapRightButton = findViewById(R.id.tap_right_button_id);
         tapLeftButton = findViewById(R.id.tap_left_button_id);
         expectedPatternText = findViewById(R.id.expected_pattern_text_id);
-        expectedIntervalText = findViewById(R.id.expected_interval_text_id);
+        bpmText = findViewById(R.id.bpm_text_id);
         timeText = findViewById(R.id.time_text_id);
         icCorrectImageView = findViewById(R.id.ic_correct_image_view_id);
         icIncorrectImageView = findViewById(R.id.ic_incorrect_image_view_id);
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         pattern = createPattern(Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.LEFT, Hand.LEFT);
 
         expectedPatternText.setText(getHandPattern(pattern));
-        expectedIntervalText.setText("Intervalo entre toques: " + bpm + " bpm, " + bpmToMs(bpm) + " ms");
+        bpmText.setText("= " + bpm);
 
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
