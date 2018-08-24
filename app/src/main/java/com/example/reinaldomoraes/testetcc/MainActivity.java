@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Tap> taps = new ArrayList();
     ArrayList<Tap> pattern;
     int defaultIntensity = 10;
-    long expectedInterval = 500;
+    int bpm = 120;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         pattern = createPattern(Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.RIGHT, Hand.LEFT, Hand.RIGHT, Hand.LEFT, Hand.LEFT);
 
-        expectedPatternText.setText("Padrão esperado: " + getHandPattern(pattern));
-        expectedIntervalText.setText("Intervalo entre toques: " + expectedInterval + " ms");
+        expectedPatternText.setText(getHandPattern(pattern));
+        expectedIntervalText.setText("Intervalo entre toques: " + bpm + " bpm, " + bpmToMs(bpm) + " ms");
 
         tapRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
     private String getHandPattern(ArrayList<Tap> taps) {
         String pattern = "";
-
         for (Tap tap : taps) {
-            pattern += tap.getHand() + ", ";
+
+            if (tap.getHand() == Hand.RIGHT) {
+                pattern += "R";
+            } else {
+                pattern += "L";
+            }
         }
         return pattern;
     }
@@ -127,10 +131,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean isInTime(long currentInterval) {
         if (currentInterval == 0) { //first tap
             return true;
-        } else if (currentInterval > expectedInterval - 200 && currentInterval < expectedInterval + 200) { //in time
+        } else if (currentInterval > bpmToMs(bpm) - 200 && currentInterval < bpmToMs(bpm) + 200) { //in time
             return true;
         } else { //out of time
             return false;
         }
+    }
+
+    private long bpmToMs (int bpm) {
+        long beatsPerMilliseconds = 60000 / bpm;
+        return beatsPerMilliseconds;
     }
 }
