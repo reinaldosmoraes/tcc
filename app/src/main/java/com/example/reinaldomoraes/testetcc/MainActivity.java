@@ -1,18 +1,23 @@
 package com.example.reinaldomoraes.testetcc;
 
+import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
 
+    LinearLayout metronomeLinearLayout;
     Button tapRightButton;
     Button tapLeftButton;
     TextView expectedPatternText;
@@ -24,12 +29,14 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Tap> pattern;
     int defaultIntensity = 10;
     int bpm = 120;
+    static Dialog bpmDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        metronomeLinearLayout = findViewById(R.id.metronome_linear_layout_id);
         tapRightButton = findViewById(R.id.tap_right_button_id);
         tapLeftButton = findViewById(R.id.tap_left_button_id);
         expectedPatternText = findViewById(R.id.expected_pattern_text_id);
@@ -61,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        metronomeLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBpmPickerDialog();
+            }
+        });
+
+    }
+
+    @Override
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        Log.i("value is",""+newVal);
     }
 
     @Override
@@ -141,5 +160,41 @@ public class MainActivity extends AppCompatActivity {
     private long bpmToMs (int bpm) {
         long beatsPerMilliseconds = 60000 / bpm;
         return beatsPerMilliseconds;
+    }
+
+    public void showBpmPickerDialog() {
+        final Dialog bpmPickerDialog = new Dialog(MainActivity.this);
+        bpmPickerDialog.setTitle("NumberPicker");
+        bpmPickerDialog.setContentView(R.layout.bpm_picker_dialog);
+
+        Button okButton = (Button) bpmPickerDialog.findViewById(R.id.ok_button_bpm_picker_id);
+        Button cancelButton = (Button) bpmPickerDialog.findViewById(R.id.cancel_button_bpm_picker_id);
+
+        final NumberPicker bpmNumberPicker = (NumberPicker) bpmPickerDialog.findViewById(R.id.bpm_number_picker_id);
+        bpmNumberPicker.setMaxValue(200);
+        bpmNumberPicker.setMinValue(60);
+        bpmNumberPicker.setWrapSelectorWheel(false);
+        bpmNumberPicker.setOnValueChangedListener(this);
+        bpmNumberPicker.setValue(bpm);
+
+        okButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                bpm = bpmNumberPicker.getValue();
+                bpmText.setText("= " + String.valueOf(bpmNumberPicker.getValue()));
+                bpmPickerDialog.dismiss();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                bpmPickerDialog.dismiss();
+            }
+        });
+
+        bpmPickerDialog.show();
     }
 }
