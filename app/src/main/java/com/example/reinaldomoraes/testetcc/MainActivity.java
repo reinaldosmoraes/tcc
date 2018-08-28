@@ -23,13 +23,13 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
     TextView expectedPatternText;
     TextView bpmText;
     TextView timeText;
+    TextView setHandPatternText;
     ImageView icCorrectImageView;
     ImageView icIncorrectImageView;
     ArrayList<Tap> taps = new ArrayList();
     ArrayList<Tap> pattern;
     int defaultIntensity = 10;
     int bpm = 120;
-    static Dialog bpmDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,13 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             }
         });
 
+        expectedPatternText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSetHandPatternDialog();
+            }
+        });
+
     }
 
     @Override
@@ -84,11 +91,14 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
 
     @Override
     public void onBackPressed() {
+        refreshExercice();
+    }
+
+    private void refreshExercice() {
         taps.clear();
         timeText.setText("");
         Toast.makeText(getApplicationContext(), "Reiniciado", Toast.LENGTH_SHORT).show();
     }
-
     private String concatenateIntervals() {
         String text = "";
         for (Tap tap : taps) {
@@ -139,9 +149,9 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         for (Tap tap : taps) {
 
             if (tap.getHand() == Hand.RIGHT) {
-                pattern += "R";
+                pattern += "R      ";
             } else {
-                pattern += "L";
+                pattern += "L      ";
             }
         }
         return pattern;
@@ -177,8 +187,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         bpmNumberPicker.setOnValueChangedListener(this);
         bpmNumberPicker.setValue(bpm);
 
-        okButton.setOnClickListener(new View.OnClickListener()
-        {
+        okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bpm = bpmNumberPicker.getValue();
@@ -187,8 +196,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener()
-        {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bpmPickerDialog.dismiss();
@@ -196,5 +204,48 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         });
 
         bpmPickerDialog.show();
+    }
+
+    public void showSetHandPatternDialog() {
+        final Dialog setHandPatternDialog = new Dialog(MainActivity.this);
+        setHandPatternDialog.setTitle("SetHandPatternDialog");
+        setHandPatternDialog.setContentView(R.layout.set_hand_pattern_dialog);
+
+        final ArrayList<Hand> newPattern = new ArrayList<>();
+        Button rightHandButton = setHandPatternDialog.findViewById(R.id.right_hand_button_id);
+        Button leftHandButton = setHandPatternDialog.findViewById(R.id.left_hand_button_id);
+        setHandPatternText = setHandPatternDialog.findViewById(R.id.new_expected_pattern_id);
+
+        rightHandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setHandPatternText.setText(setHandPatternText.getText() + "R ");
+                newPattern.add(Hand.RIGHT);
+
+                if (newPattern.size() >= 8){
+                    pattern = createPattern(newPattern.get(0), newPattern.get(1), newPattern.get(2), newPattern.get(3), newPattern.get(4), newPattern.get(5), newPattern.get(6), newPattern.get(7));
+                    expectedPatternText.setText(getHandPattern(pattern));
+                    setHandPatternDialog.dismiss();
+                    refreshExercice();
+                }
+            }
+        });
+
+        leftHandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setHandPatternText.setText(setHandPatternText.getText() + "L ");
+                newPattern.add(Hand.LEFT);
+
+                if (newPattern.size() >= 8){
+                    pattern = createPattern(newPattern.get(0), newPattern.get(1), newPattern.get(2), newPattern.get(3), newPattern.get(4), newPattern.get(5), newPattern.get(6), newPattern.get(7));
+                    expectedPatternText.setText(getHandPattern(pattern));
+                    setHandPatternDialog.dismiss();
+                    refreshExercice();
+                }
+            }
+        });
+
+        setHandPatternDialog.show();
     }
 }
